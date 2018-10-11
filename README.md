@@ -1,6 +1,7 @@
 # Desafio Snake
 
 Desafio Snake é um projeto em Unity/C# feito para um desafio técnico com a Gazeus
+
 Os graficos utilizados são padrões da Unity
 
 ### Download da Build/Exe:
