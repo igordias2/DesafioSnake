@@ -9,22 +9,31 @@ public class Player_Controller : MonoBehaviour
 
     [Tooltip("Prefab do Corpo")]
     [SerializeField] GameObject bodyPrefab;
+    [Tooltip("Onde os bodies vão ficar como Parent")]
+    [SerializeField] GameObject playerBody;
 
+    [Space]
     [Tooltip("Corpos da cobra")]
     [SerializeField] List<GameObject> bodies = new List<GameObject>();
 
+    [Space]
     [Tooltip("A direção que irá se mover")]
     [SerializeField] int movDirection;
 
 
+    [Space]
     [Tooltip("Tamanho a mover")]
     [SerializeField] float size;
 
 
+    [Space]
     [Tooltip("Velocidade com que se chama o update de movimento, quanto menor, mais rapido.")]
     [SerializeField] float movSpeed;
     float callTimes;
 
+    [Space]
+    [SerializeField] int score = 0;
+    [SerializeField] TMPro.TMP_Text scoreText;
 
     //Ultima posição do player
     Vector2 lastPos;
@@ -120,6 +129,7 @@ public class Player_Controller : MonoBehaviour
         }
         CheckBodies();
     }
+
     /// <summary>
     /// Faz a checagem para que o ultimo vá para o lugar da ultima posição da "cabeça"
     /// </summary>
@@ -157,19 +167,32 @@ public class Player_Controller : MonoBehaviour
     /// <param name="go">go é o GameObject que se vai tirar os parametros</param>
     void AddBody(GameObject go)
     {
-        Vector2 spawnPos = go.transform.position;
+        
         GameObject newBody = Instantiate(bodyPrefab, lastPos, Quaternion.identity);
+        newBody.transform.SetParent(playerBody.transform);
         bodies.Add(newBody);
+
+        SetScore(go.GetComponent<Food_Controller>().GetScore());
         Destroy(go);
+
         spawnerController.Spawn(spawnerController.foodPrefab);
+    }
+
+    /// <summary>
+    /// Mudar o score
+    /// </summary>
+    /// <param name="scoreP">pontuacao para adicionar ao score</param>
+    void SetScore(int scoreP)
+    {
+        score += scoreP;
+        scoreText.text = score.ToString();
     }
     /// <summary>
     /// Chama o game over
     /// </summary>
-    /// <param name="go"></param>
+    /// <param name="go">o Obj que lhe matou</param>
     void GameOver(GameObject go)
     {
-        print("GameOver");
-        print(go);
+        GameObject.FindObjectOfType<GameOver_Controller>().GameOver(score);
     }
 }
